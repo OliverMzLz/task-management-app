@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<script>
+    if(localStorage.getItem('token') === null){
+        window.location.href = '/login';
+    }
+</script>
+
+<body>
+    <div class="min-h-screen bg-gray-100 p-8">
+        <nav class="flex justify-between items-center mb-6">
+            <ul class="flex space-x-4">
+                <li><button id="profileButton"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 text-blue-600">
+                        Profile
+                    </button></li>
+                <li><button id="addTaskButton"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 text-blue-600">Add
+                        Task</button></li>
+                <li><button id="viewTaskButton"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 text-blue-600">View
+                        Tasks</button></li>
+            </ul>
+            <button id="logoutButton"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 text-blue-600">Logout</button>
+        </nav>
+        <div class="bg-white rounded-lg shadow p-6 max-w-sm mx-auto" id="add">
+            <h1 class="text-2xl font-bold mb-4">Task Manager</h1>
+            <form id="form">
+                <div class="mb-4">
+                    <h2 class="text-lg font-semibold mb-2">Create Task</h2>
+                    <div class="mb-3">
+                        <label for="title" class="block text-sm font-medium mb-1">Title</label>
+                        <input
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            id="title" placeholder="Title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="block text-sm font-medium mb-1">Description(Optional)</label>
+                        <textarea
+                            class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            id="description" placeholder="Description">
+                    </textarea>
+                    </div>
+                    <div class="mb-6"><label for="due-date" class="block text-sm font-medium mb-1">Due Date
+                            (Optional)</label>
+                        <input
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            id="due-date" placeholder="mm/dd/yyyy" type="date">
+                    </div>
+
+                    <!-- completed -->
+                    <div class="mb-6 hidden" id="completediv">
+                        <label for="completed" class="block text-sm font-medium mb-1">Completed</label>
+                        <input type="checkbox" id="completed" name="completed"
+                            class="h-4 w-4 rounded-md border border-input bg-background text-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                    </div>
+
+                    <button
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full text-white bg-black">
+                        Create Task
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 max-w-sm mx-auto" id="view">
+            <h1 class="text-2xl font-bold mb-4">Task Manager</h1>
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold mb-2">List of Tasks</h2>
+                <ul class="list-disc pl-5" id="list">
+                    <li>
+                        <div class="bg-white rounded-lg shadow p-4 mb-4">
+                            <h3 class="text-lg font-semibold">Task 1</h3>
+                            <p class="text-sm text-gray-500">Due Date: 2024-02-15</p>
+                            <p class="text-sm text-green-500">Completed</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white rounded-lg shadow p-4 mb-4">
+                            <h3 class="text-lg font-semibold">Task 2</h3>
+                            <p class="text-sm text-gray-500">Due Date: 2024-02-17</p>
+                            <p class="text-sm text-red-500">Incomplete</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white rounded-lg shadow p-4 mb-4">
+                            <h3 class="text-lg font-semibold">Task 3</h3>
+                            <p class="text-sm text-gray-500">Due Date: 2024-02-20</p>
+                            <p class="text-sm text-green-500">Completed</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white rounded-lg shadow p-4 mb-4">
+                            <h3 class="text-lg font-semibold">Task 4</h3>
+                            <p class="text-sm text-gray-500">Due Date: 2024-02-22</p>
+                            <p class="text-sm text-red-500">Incomplete</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 max-w-sm mx-auto" id="profile">
+            <h1 class="text-2xl font-bold mb-4">Profile</h1>
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="h-12 w-12 bg-gray-300 rounded-full"></div>
+                <div>
+                    <h2 class="text-lg font-semibold">Username</h2>
+                    <p class="text-gray-500">user@example.com</p>
+                </div>
+            </div>
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold mb-2">Profile Information</h2>
+                <div class="space-y-2"><label
+                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        for="email">Email</label><input
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        id="email" placeholder="user@example.com" type="email" disabled></div>
+                <div class="space-y-2"><label
+                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        for="password">Password</label><input
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        id="password" placeholder="Enter new password" type="password" disabled></div>
+            </div><button
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full text-white bg-black">Update
+                Profile</button>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        let addTaskButton = document.getElementById('addTaskButton');
+        let viewTaskButton = document.getElementById('viewTaskButton');
+        let profileButton = document.getElementById("profileButton");
+
+        let logoutButton = document.getElementById('logoutButton');
+        logoutButton.addEventListener('click', () => {
+            fetch('/logout', {
+                method: 'POST'
+            })
+                .then(response => {
+                    localStorage.removeItem('token');
+                    window.location.reload();
+                });
+        });
+
+        let add = document.getElementById('add');
+        let view = document.getElementById('view');
+        let profile = document.getElementById('profile');
+
+        add.style.display = 'none';
+        view.style.display = 'block';
+        profile.style.display = 'none';
+
+
+        addTaskButton.addEventListener('click', () => {
+            add.style.display = 'block';
+            view.style.display = 'none';
+            profile.style.display = 'none';
+        });
+
+        viewTaskButton.addEventListener('click', () => {
+            add.style.display = 'none';
+            view.style.display = 'block';
+            profile.style.display = 'none';
+        });
+
+        profileButton.addEventListener('click', () => {
+            add.style.display = 'none';
+            view.style.display = 'none';
+            profile.style.display = 'block';
+        });
+
+
+
+
+
+        let list = document.getElementById('list');
+        function renderTasks(tasks) {
+            list.innerHTML = '';
+            tasks.forEach(task => {
+                let li = document.createElement('li');
+                li.innerHTML = `
+                <div class="bg-white rounded p-4 mb-4 border b-1">
+                    <h3 class="text-lg font-semibold mb-2">${task.name}</h3>
+                    <p class="text-sm text-gray-500">Due Date: ${new Date(task.dueDate).toDateString()}</p>
+                    <br/>
+                    <span class="text-md bg-${task.completed ? 'green' : 'red'}-500 text-white px-3 py-1 w-fit text-center my-2">${task.completed ? 'Completed' : 'Incomplete'}</span>
+                </div>
+                `;
+                li.addEventListener('click', () => {
+                    editTask(task);
+                });
+                li.classList.add('list-none')
+                li.classList.add('cursor-pointer');
+                list.appendChild(li);
+            });
+        }
+
+        function getTasks() {
+            fetch('/tasks')
+                .then(response => response.json())
+                .then(data => {
+                    renderTasks(data);
+                });
+        }
+
+        getTasks();
+
+        let form = document.getElementById('form');
+        form.addEventListener('submit', event => {
+            console.log('submit');
+            event.preventDefault();
+
+            let title = document.getElementById('title').value;
+            let description = document.getElementById('description').value;
+            let dueDate = document.getElementById('due-date').value;
+            let completed = document.getElementById('completed').checked;
+
+            //check if id is present
+            let id = document.querySelector('input[name="id"]');
+
+            if (id) {
+                console.log("id", id.value);
+                id = id.value;
+                fetch(`/tasks/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: title,
+                        description,
+                        dueDate,
+                        completed
+
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        getTasks();
+                        add.style.display = 'none';
+                        view.style.display = 'block';
+                    });
+                return;
+            }
+
+            fetch('/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: title,
+                    description,
+                    dueDate
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    getTasks();
+                    add.style.display = 'none';
+                    view.style.display = 'block';
+                });
+        });
+
+        function editTask(task) {
+            //display the add form plus complete checkbox
+            add.style.display = 'block';
+            view.style.display = 'none';
+            //populate the form with the task details
+            document.getElementById('title').value = task.name;
+            document.getElementById('description').value = "";
+            //substring to remove the time part of the date
+            document.getElementById('due-date').value = task.dueDate.substring(0, 10);
+            document.getElementById('completediv').style.display = 'block';
+            document.getElementById('completed').checked = task.completed;
+            //add a checkbox to the form to mark the task as completed
+
+            //add a hidden input to the form to store the task id
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'id';
+            input.value = task._id;
+            form.appendChild(input);
+
+        }
+    </script>
+</body>
+
+</html>
